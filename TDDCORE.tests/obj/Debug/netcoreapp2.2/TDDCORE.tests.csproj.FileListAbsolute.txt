@@ -1,0 +1,17 @@
+C:\Egna projekt\TDDCORE\TDDCORE.tests\bin\Debug\netcoreapp2.2\xunit.runner.visualstudio.dotnetcore.testadapter.dll
+C:\Egna projekt\TDDCORE\TDDCORE.tests\bin\Debug\netcoreapp2.2\xunit.runner.reporters.netcoreapp10.dll
+C:\Egna projekt\TDDCORE\TDDCORE.tests\bin\Debug\netcoreapp2.2\xunit.runner.utility.netcoreapp10.dll
+C:\Egna projekt\TDDCORE\TDDCORE.tests\bin\Debug\netcoreapp2.2\TDDCORE.tests.deps.json
+C:\Egna projekt\TDDCORE\TDDCORE.tests\bin\Debug\netcoreapp2.2\TDDCORE.tests.runtimeconfig.json
+C:\Egna projekt\TDDCORE\TDDCORE.tests\bin\Debug\netcoreapp2.2\TDDCORE.tests.runtimeconfig.dev.json
+C:\Egna projekt\TDDCORE\TDDCORE.tests\bin\Debug\netcoreapp2.2\TDDCORE.tests.dll
+C:\Egna projekt\TDDCORE\TDDCORE.tests\bin\Debug\netcoreapp2.2\TDDCORE.tests.pdb
+C:\Egna projekt\TDDCORE\TDDCORE.tests\bin\Debug\netcoreapp2.2\TDDCORE.dll
+C:\Egna projekt\TDDCORE\TDDCORE.tests\bin\Debug\netcoreapp2.2\TDDCORE.pdb
+C:\Egna projekt\TDDCORE\TDDCORE.tests\obj\Debug\netcoreapp2.2\TDDCORE.tests.csprojAssemblyReference.cache
+C:\Egna projekt\TDDCORE\TDDCORE.tests\obj\Debug\netcoreapp2.2\TDDCORE.tests.csproj.CoreCompileInputs.cache
+C:\Egna projekt\TDDCORE\TDDCORE.tests\obj\Debug\netcoreapp2.2\TDDCORE.tests.AssemblyInfoInputs.cache
+C:\Egna projekt\TDDCORE\TDDCORE.tests\obj\Debug\netcoreapp2.2\TDDCORE.tests.AssemblyInfo.cs
+C:\Egna projekt\TDDCORE\TDDCORE.tests\obj\Debug\netcoreapp2.2\TDDCORE.tests.csproj.CopyComplete
+C:\Egna projekt\TDDCORE\TDDCORE.tests\obj\Debug\netcoreapp2.2\TDDCORE.tests.dll
+C:\Egna projekt\TDDCORE\TDDCORE.tests\obj\Debug\netcoreapp2.2\TDDCORE.tests.pdb
