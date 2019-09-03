@@ -5,7 +5,9 @@ VisualStudioVersion = 16.0.29215.179
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TDDCORE", "TDDCORE\TDDCORE.csproj", "{23828CF2-E5A1-418F-B6AF-E885635BF4DB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TDDCORE.tests", "TDDCORE.tests\TDDCORE.tests.csproj", "{CC6F8CB6-8B10-4B24-9735-66E00CFDB374}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TDDCORE.tests", "TDDCORE.tests\TDDCORE.tests.csproj", "{CC6F8CB6-8B10-4B24-9735-66E00CFDB374}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kata-Bowling", "Kata-Bowling\Kata-Bowling.csproj", "{93D5AD91-6CE7-449F-B048-8F1C074CF539}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{CC6F8CB6-8B10-4B24-9735-66E00CFDB374}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CC6F8CB6-8B10-4B24-9735-66E00CFDB374}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CC6F8CB6-8B10-4B24-9735-66E00CFDB374}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93D5AD91-6CE7-449F-B048-8F1C074CF539}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93D5AD91-6CE7-449F-B048-8F1C074CF539}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93D5AD91-6CE7-449F-B048-8F1C074CF539}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93D5AD91-6CE7-449F-B048-8F1C074CF539}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

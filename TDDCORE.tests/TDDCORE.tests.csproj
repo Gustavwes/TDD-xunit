@@ -14,6 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Kata-Bowling\Kata-Bowling.csproj" />
     <ProjectReference Include="..\TDDCORE\TDDCORE.csproj" />
   </ItemGroup>
 
