@@ -9,8 +9,32 @@ namespace Kata_Bowling.Models
     public class Frame
     {
         public int FrameNumber { get; set; }
-        public int? FirstThrow { get; set; }
-        public int? SecondThrow { get; set; }
+        public int? FirstThrow {
+            get
+            {
+                return FirstThrow;
+            }
+            set
+            {
+                if(value < 0)
+                    throw new InvalidOperationException("Negatives not allowed: " + value);
+                if(value > 10)
+                    throw new InvalidOperationException("Values over 10 not allowed: " + value);
+            }
+        }
+        public int? SecondThrow {
+            get
+            {
+                return SecondThrow;
+            }
+            set
+            {
+                if (value < 0)
+                    throw new InvalidOperationException("Negatives not allowed: " + value);
+                if (value > 10)
+                    throw new InvalidOperationException("Values over 10 not allowed: " + value);
+            }
+        }
         public string Status
         {
             get

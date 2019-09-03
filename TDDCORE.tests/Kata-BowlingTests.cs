@@ -44,7 +44,43 @@ namespace TDDCORE.tests
             Assert.Equal(5, roundOfPlay.TotalScore);
         }
         [Fact]
+        public void GetStatusFromFrame_Expecting_Strike()
+        {
+            //Arrange
+            var oneFrame = new Frame { FirstThrow = 10 };
+            //Act
+            var result = oneFrame.Status;
+            //Assert
+            Assert.Equal("Strike", result);
 
+        }
+        [Fact]
+        public void GetStatusFromFrame_Expecting_Spare()
+        {
+            //Arrange
+            var oneFrame = new Frame { FirstThrow = 0, SecondThrow = 10 };
+            //Act
+            var result = oneFrame.Status;
+            //Assert
+            Assert.Equal("Spare", result);
+        }
+        [Fact]
+        public void ThrowInvalidOperation_When_Negative_Score_Set()
+        {
+            //Act
+            var ex = Assert.Throws<InvalidOperationException>(() => new Frame { FirstThrow = -1 });
+            //Assert
+            Assert.Equal("Negatives not allowed: -1", ex.Message);
+        }
+
+        [Fact]
+        public void ThrowInvalidOperation_When_Too_High_Score_Set()
+        {
+            //Act
+            var ex = Assert.Throws<InvalidOperationException>(() => new Frame { FirstThrow = 111 });
+            //Assert
+            Assert.Equal("Values over 10 not allowed: 111", ex.Message);
+        }
 
     }
 }
