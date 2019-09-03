@@ -28,6 +28,10 @@ namespace Kata_Bowling.Models
         {
             get
             {
+                if (FirstThrow == null)
+                    return 0;
+                if ((SecondThrow) == null)
+                    return FirstThrow;
                 return FirstThrow + SecondThrow;
             }
         }
