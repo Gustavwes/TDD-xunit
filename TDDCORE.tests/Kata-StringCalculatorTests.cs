@@ -112,9 +112,9 @@ namespace TDDCORE.tests
         [Fact]
         public void Add_Test_With_New_Delimiter_Of_SeveralCharacters()
         {
-            //Arrange
-            var numberString = "//[*][%]\n1*2%3";
-            //Act
+            //Arrange 
+            var numberString = "//[*][%]\n1*2%3"; 
+            //Act 
             var result = new StringCalculator().Add(numberString);
             //Assert
             Assert.Equal(6, result);

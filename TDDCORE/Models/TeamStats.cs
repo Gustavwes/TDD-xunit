@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace TDDCORE.Model
+namespace TDDCORE.Models
 {
     public class TeamStats
     {

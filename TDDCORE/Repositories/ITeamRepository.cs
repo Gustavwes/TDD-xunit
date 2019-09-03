@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using TDDCORE.Model;
+using TDDCORE.Models;
 
 namespace TDDCORE.Repositories
 {
