@@ -85,7 +85,6 @@ namespace TDDCORE.tests
             //Arrange
             var numberString = "-2,15,4";
             //Act
-            //var result = new StringCalculator().Add(numberString);
             var ex = Assert.Throws<InvalidOperationException>(() => new StringCalculator().Add(numberString));
             //Assert
             Assert.Equal("Negatives not allowed: -2", ex.Message);
@@ -96,7 +95,6 @@ namespace TDDCORE.tests
             //Arrange
             var numberString = "-2,-5,4";
             //Act
-            //var result = new StringCalculator().Add(numberString);
             var ex = Assert.Throws<InvalidOperationException>(() => new StringCalculator().Add(numberString));
             //Assert
             Assert.Equal("Negatives not allowed: -2,-5", ex.Message);
