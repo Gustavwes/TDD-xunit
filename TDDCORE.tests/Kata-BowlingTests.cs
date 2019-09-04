@@ -23,8 +23,9 @@ namespace TDDCORE.tests
             oneFrame.SecondThrow = 2;
             //Assert
             Assert.Equal(7, oneFrame.GetScoreForFrame(frames));
-            Assert.Equal(0, oneFrame.Status);
+            Assert.Equal(6, oneFrame.Status);
         }
+
         [Fact]
         public void GetTotalScoreOnPlayerRound_Simple_After_Two_Frames()
         {
@@ -39,6 +40,7 @@ namespace TDDCORE.tests
 
             Assert.Equal(7, roundOfPlay.TotalScore);
         }
+
         [Fact]
         public void GetTotalScoreOnPlayerRound_Simple_After_Two_Frames_When_One_Score_Is_Null()
         {
@@ -52,6 +54,7 @@ namespace TDDCORE.tests
 
             Assert.Equal(5, roundOfPlay.TotalScore);
         }
+
         [Fact]
         public void GetTotalScoresWithSpare()
         {
@@ -80,8 +83,9 @@ namespace TDDCORE.tests
 
             var result = roundOfPlay.TotalScore;
 
-            Assert.Equal(0, result);
+            Assert.Equal(20, result);
         }
+
         [Fact]
         public void GetTotalScoresWithSimpleStrike()
         {
@@ -97,6 +101,7 @@ namespace TDDCORE.tests
 
             Assert.Equal(20, result);
         }
+
         [Fact]
         public void GetTotalScoresWithStrikeSpareNormal()
         {
@@ -113,8 +118,9 @@ namespace TDDCORE.tests
             var result = roundOfPlay.TotalScore;
 
 
-            Assert.Equal(45, result);
+            Assert.Equal(40, result);
         }
+
         [Fact]
         public void GetMaxPointsForAFrame()
         {
@@ -140,6 +146,7 @@ namespace TDDCORE.tests
             Assert.Null(shouldBeNull);
 
         }
+
         [Fact]
         public void GetMaxPointsForAFrame_AndThenStopStrikeChain()
         {
@@ -163,6 +170,7 @@ namespace TDDCORE.tests
             Assert.Equal(93, resultTotal);
 
         }
+
         [Fact]
         public void GetStatusFromFrame_Expecting_Strike()
         {
@@ -174,6 +182,7 @@ namespace TDDCORE.tests
             Assert.Equal((int)StatusUtility.FrameStatus.Strike, result);
 
         }
+
         [Fact]
         public void GetStatusFromFrame_Expecting_Spare()
         {
@@ -184,6 +193,7 @@ namespace TDDCORE.tests
             //Assert
             Assert.Equal((int)StatusUtility.FrameStatus.Spare, result);
         }
+
         [Fact]
         public void ThrowInvalidOperation_When_Negative_Score_Set()
         {
@@ -192,6 +202,7 @@ namespace TDDCORE.tests
             //Assert
             Assert.Equal("Negatives not allowed: -1", ex.Message);
         }
+
         [Fact]
         public void ThrowInvalidOperation_When_Impossible_Score_Set()
         {
@@ -209,28 +220,26 @@ namespace TDDCORE.tests
             //Assert
             Assert.Equal("Values over 10 not allowed: 111", ex.Message);
         }
+
         [Fact]
         public void ThrowIndexOutOfRange_When_Over_Ten_Frames_Are_Added_To_Round()
         {
             var round = new RoundOfPlay(new Player(), 1);
-            var frames = GenerateSpecifiedNumberOfFrames(10);
-            var extraFrame = GenerateSpecifiedNumberOfFrames(1);
+            var frames = GenerateSpecifiedNumberOfRandomFrames(10);
+            var extraFrame = GenerateSpecifiedNumberOfRandomFrames(1);
             
             round.Frames = frames.ToArray();
             _ = Assert.Throws<IndexOutOfRangeException>(() => round.Frames[10] = extraFrame.FirstOrDefault());
             
             Assert.Equal(10, round.Frames.Count());
         }
+
         [Fact]
         public void CorrectTotalScoreForFullRound_WithoutThirdThrow()
         {
             //Arrange
             var round = new RoundOfPlay(new Player(), 1);
-            round.Frames = new Frame[10];
-            for (int i = 0; i < 10; i++)
-            {
-                round.Frames[i] = new Frame() { FrameNumber = i+1, FirstThrow = i, SecondThrow = 0 };
-            }
+            round.Frames = GeneratePredictableFrames(10);
 
             //Act
             var result = round.TotalScore;
@@ -238,6 +247,7 @@ namespace TDDCORE.tests
             //Assert
             Assert.Equal(45, result);
         }
+
         [Fact]
         public void CorrectCountStrikeSpareNormal()
         {
@@ -255,18 +265,15 @@ namespace TDDCORE.tests
             var result = roundOfPlay.TotalScore;
 
             //Assert
-            Assert.Equal(48, result);
+            Assert.Equal(43, result);
         }
+
         [Fact]
         public void CorrectTotalScoreForFullRound_WithSomeStrikesAndSpares_WithoutThirdthrow()
         {
             //Arrange
             var round = new RoundOfPlay(new Player(), 1);
-            round.Frames = new Frame[10];
-            for (int i = 0; i < 10; i++)
-            {
-                round.Frames[i] = new Frame() { FrameNumber = i+1, FirstThrow = i, SecondThrow = 0 };
-            }
+            round.Frames = GeneratePredictableFrames(10);
 
 
             round.Frames[0] = new Frame() { FrameNumber = 1, FirstThrow = 10 };
@@ -285,15 +292,97 @@ namespace TDDCORE.tests
             Assert.Equal(98, result);
         }
 
+        [Fact]
+        public void OnlyAllowThirdThrowOnRoundTen()
+        {
+            var round = new RoundOfPlay(new Player(), 1);
+            round.Frames = GeneratePredictableFrames(10);
+            _ = Assert.Throws<InvalidOperationException>(() => round.Frames[0].ThirdThrow = 3);
 
-        private List<Frame> GenerateSpecifiedNumberOfFrames(int numberOfFrames)
+            round.Frames[9].ThirdThrow = 3;
+            Assert.Equal(3, round.Frames[9].ThirdThrow);
+
+        }
+
+        [Fact]
+        public void CalculateCorrectValueOnRoundTenAllStrikes()
+        {
+            var frames = GeneratePredictableFrames(10);
+            frames[9] =  new Frame() { FrameNumber = 10, FirstThrow = 10, SecondThrow = 10  };           
+            frames[9].ThirdThrow = 10;
+
+            var result = frames[9].GetScoreForFrame(frames);
+            Assert.Equal(30, result);
+
+        }
+
+        [Fact]
+        public void CalculateCorrectWithStrikeOnNine_AndOpeningStrikeOn10Ten()
+        {
+            var frames = GeneratePredictableFrames(10);
+            frames[8] = new Frame() { FrameNumber = 9, FirstThrow = 10 };
+            frames[9] = new Frame() { FrameNumber = 10, FirstThrow = 10, SecondThrow = 1 };
+            frames[9].ThirdThrow = 5;
+
+            var result = frames[8].GetScoreForFrame(frames);
+            Assert.Equal(21, result);
+
+        }
+
+        [Fact]
+        public void TryGenerateAndCalculate100000Games()
+        {
+            var round = new RoundOfPlay(new Player(), 1);
+            var total = 0;
+            var highestRound = 0;
+            var highestRoundFrames = new Frame[10];
+            var lowestRound = 100;
+            var lowestRoundFrames = new Frame[10];
+            try
+            {
+                for (int i = 0; i < 100000; i++)
+                {
+                    var fullRoundOfFrames = GenerateSpecifiedNumberOfRandomFrames(10);
+                    round.Frames = fullRoundOfFrames.ToArray();
+                    total += (int)round.TotalScore;
+                    if ((int)round.TotalScore > highestRound)
+                    {
+                        highestRound = (int)round.TotalScore;
+                        highestRoundFrames = round.Frames;
+                    }
+                    if ((int)round.TotalScore < lowestRound)
+                    {
+                        lowestRound = (int)round.TotalScore;
+                        lowestRoundFrames = round.Frames;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Did not expect an exception, but got: " + ex.Message);
+            }
+
+        }
+        private Frame[] GeneratePredictableFrames(int numberOfFrames)
+        {
+            var frames = new Frame[10];
+            for (int i = 0; i < numberOfFrames; i++)
+            {
+                frames[i] = new Frame() { FrameNumber = i + 1, FirstThrow = i, SecondThrow = 0 };
+               
+            }
+            return frames;
+        }
+
+        private List<Frame> GenerateSpecifiedNumberOfRandomFrames(int numberOfFrames)
         {
             var returnList = new List<Frame>();
             var rng = new Random();
             for (int i = 0; i < numberOfFrames; i++)
             {
                 var firstThrow = rng.Next(0, 11);
-                var secondThrow = rng.Next(0, 11);
+                
+                var secondThrow = firstThrow != 10 ? rng.Next(0, 11) : 0;
                 if ((firstThrow + secondThrow) > 10)
                 {
                     while (secondThrow + firstThrow > 10)
@@ -301,7 +390,14 @@ namespace TDDCORE.tests
                         secondThrow = rng.Next(0, 11);
                     }
                 }
-                returnList.Add(new Frame() { FirstThrow = firstThrow, SecondThrow = secondThrow });
+                var frame = new Frame() { FrameNumber = i + 1, FirstThrow = firstThrow, SecondThrow = secondThrow };
+                if (i == 9)
+                {
+                    if (firstThrow == 10)
+                        frame.ThirdThrow = rng.Next(0, 11);
+
+                }
+                returnList.Add(frame);
             }
             return returnList;
         }

@@ -33,7 +33,7 @@ namespace Kata_Bowling.Models
             }
             set
             {
-                if(value + FirstThrow > 10)
+                if(value + FirstThrow > 10 && FrameNumber != 10)
                     throw new InvalidOperationException($"Knocked down pins in frame are greater than 10 ({FirstThrow} + {value}). Something went wrong");
                 if (value < 0)
                     throw new InvalidOperationException("Negatives not allowed: " + value);
@@ -43,7 +43,8 @@ namespace Kata_Bowling.Models
                 secondThrow = value;
             }
         }
-        private int? thirdThrow
+        private int? thirdThrow { get; set; }
+        public int? ThirdThrow
         {
             get
             {
@@ -57,6 +58,8 @@ namespace Kata_Bowling.Models
                     throw new InvalidOperationException("Values over 10 not allowed: " + value);
                 if(FrameNumber != 10)
                     throw new InvalidOperationException("Can only have a third throw in frame 10. Current frame number: " + FrameNumber);
+                //if (Status != (int)StatusUtility.FrameStatus.WaitingOnFirstThrow || Status != (int)StatusUtility.FrameStatus.WaitingOnSecondThrow)
+                //    throw new InvalidOperationException("Can't set third throw without a value in First & Second that is greater than 10. TEST:" + (FirstThrow + SecondThrow));
                 thirdThrow = value;
             }
         }
@@ -85,8 +88,24 @@ namespace Kata_Bowling.Models
         {
             if (scoreForFrame != null)
                 return scoreForFrame;
-            
-            switch(Status)
+            if(FrameNumber == 10)
+            {
+                scoreForFrame = FirstThrow + (SecondThrow == null ? 0 : SecondThrow) + (ThirdThrow == null ? 0 : ThirdThrow);
+                return FirstThrow + (SecondThrow == null ? 0 : SecondThrow) + (ThirdThrow == null ? 0 : ThirdThrow);
+            }
+            if (FrameNumber == 9 && Status == (int)StatusUtility.FrameStatus.Strike)
+            {
+                var nextFrame = thisFramesArray[FrameNumber];
+                if(nextFrame != null)
+                {
+                    var nextRoundTotal = (nextFrame.FirstThrow ?? 0) + (nextFrame.SecondThrow ?? 0);
+                    scoreForFrame = 10 + nextRoundTotal;
+                    return 10 + nextRoundTotal;
+                }
+                scoreForFrame = FirstThrow + (SecondThrow == null ? 0 : SecondThrow) + (ThirdThrow == null ? 0 : ThirdThrow);
+                return FirstThrow + (SecondThrow == null ? 0 : SecondThrow) + (ThirdThrow == null ? 0 : ThirdThrow);
+            }
+            switch (Status)
             {
                 case (int)StatusUtility.FrameStatus.WaitingOnFirstThrow:
                     return null;
@@ -104,7 +123,10 @@ namespace Kata_Bowling.Models
                 case (int)StatusUtility.FrameStatus.Strike:
                     if (thisFramesArray[FrameNumber] != null
                         && thisFramesArray[FrameNumber].Status == (int)StatusUtility.FrameStatus.Spare)
+                    {
+                        scoreForFrame = 20;
                         return 20;
+                    }
                     if (thisFramesArray[FrameNumber] != null 
                         && 
                         thisFramesArray[FrameNumber + 1] != null 
