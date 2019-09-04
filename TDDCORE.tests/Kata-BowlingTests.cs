@@ -363,6 +363,48 @@ namespace TDDCORE.tests
             }
 
         }
+        [Fact]
+        public void FunTestToReachPerfectScore()
+        {
+            var round = new RoundOfPlay(new Player(), 1);
+            long total = 0;
+            long highestRound = 0;
+            var highestRoundFrames = new Frame[10];
+            var lowestRound = 100;
+            var lowestRoundFrames = new Frame[10];
+            long amountOfTestRuns = 0;
+
+            var perfect = new RoundOfPlay(new Player(), 1);
+
+            perfect.Frames = GetPerfectRound();
+            var testTotal = perfect.TotalScore;
+            try
+            {
+                while(highestRound < 300)
+                {
+                    var fullRoundOfFrames = GenerateSpecifiedNumberOfRandomFrames(10);
+                    round.Frames = fullRoundOfFrames.ToArray();
+                    total += (int)round.TotalScore;
+                    if ((int)round.TotalScore > highestRound)
+                    {
+                        highestRound = (int)round.TotalScore;
+                        highestRoundFrames = round.Frames;
+                    }
+                    if ((int)round.TotalScore < lowestRound)
+                    {
+                        lowestRound = (int)round.TotalScore;
+                        lowestRoundFrames = round.Frames;
+                    }
+                    amountOfTestRuns++;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Did not expect an exception, but got: " + ex.Message);
+            }
+
+        }
+
         private Frame[] GeneratePredictableFrames(int numberOfFrames)
         {
             var frames = new Frame[10];
@@ -393,13 +435,29 @@ namespace TDDCORE.tests
                 var frame = new Frame() { FrameNumber = i + 1, FirstThrow = firstThrow, SecondThrow = secondThrow };
                 if (i == 9)
                 {
-                    if (firstThrow == 10)
+                    if (frame.Status == (int)StatusUtility.FrameStatus.Spare || frame.Status == (int)StatusUtility.FrameStatus.Strike)
                         frame.ThirdThrow = rng.Next(0, 11);
 
                 }
                 returnList.Add(frame);
             }
             return returnList;
+        }
+
+        private Frame[] GetPerfectRound()
+        {
+            var frames = new Frame[10];
+            for (int i = 0; i < 10; i++)
+            {
+                frames[i] = new Frame() { FrameNumber = i + 1, FirstThrow = 10  };
+                if (i == 9)
+                {
+                    frames[i].SecondThrow = 10;
+                    frames[i].ThirdThrow = 10;
+
+                }
+            }
+            return frames;
         }
     }
 }
