@@ -198,7 +198,7 @@ namespace TDDCORE.tests
             //Act
             var ex = Assert.Throws<InvalidOperationException>(() => new Frame { FirstThrow = 7, SecondThrow = 5 });
             //Assert
-            Assert.Equal("Knocked down pins are greater than 10 (7 + 5). Something went wrong", ex.Message);
+            Assert.Equal("Knocked down pins in frame are greater than 10 (7 + 5). Something went wrong", ex.Message);
         }
 
         [Fact]
@@ -220,6 +220,69 @@ namespace TDDCORE.tests
             _ = Assert.Throws<IndexOutOfRangeException>(() => round.Frames[10] = extraFrame.FirstOrDefault());
             
             Assert.Equal(10, round.Frames.Count());
+        }
+        [Fact]
+        public void CorrectTotalScoreForFullRound_WithoutThirdThrow()
+        {
+            //Arrange
+            var round = new RoundOfPlay(new Player(), 1);
+            round.Frames = new Frame[10];
+            for (int i = 0; i < 10; i++)
+            {
+                round.Frames[i] = new Frame() { FrameNumber = i+1, FirstThrow = i, SecondThrow = 0 };
+            }
+
+            //Act
+            var result = round.TotalScore;
+
+            //Assert
+            Assert.Equal(45, result);
+        }
+        [Fact]
+        public void CorrectCountStrikeSpareNormal()
+        {
+            //Arrange
+            var testPlayer = new Player();
+            var firstFrame = new Frame { FrameNumber = 1, FirstThrow = 10, SecondThrow = null };
+            var secondFrame = new Frame() { FrameNumber = 2, FirstThrow = 3, SecondThrow = 7 };
+            var thirdFrame = new Frame() { FrameNumber = 3, FirstThrow = 5, SecondThrow = 3 };
+
+            var roundOfPlay = new RoundOfPlay(testPlayer, 1);
+            roundOfPlay.Frames[0] = firstFrame;
+            roundOfPlay.Frames[1] = secondFrame;
+            roundOfPlay.Frames[2] = thirdFrame;
+            //Act
+            var result = roundOfPlay.TotalScore;
+
+            //Assert
+            Assert.Equal(48, result);
+        }
+        [Fact]
+        public void CorrectTotalScoreForFullRound_WithSomeStrikesAndSpares_WithoutThirdthrow()
+        {
+            //Arrange
+            var round = new RoundOfPlay(new Player(), 1);
+            round.Frames = new Frame[10];
+            for (int i = 0; i < 10; i++)
+            {
+                round.Frames[i] = new Frame() { FrameNumber = i+1, FirstThrow = i, SecondThrow = 0 };
+            }
+
+
+            round.Frames[0] = new Frame() { FrameNumber = 1, FirstThrow = 10 };
+            round.Frames[1] = new Frame() { FrameNumber = 2, FirstThrow = 2, SecondThrow = 8 };
+            round.Frames[3] = new Frame() { FrameNumber = 4, FirstThrow = 0, SecondThrow = 10 };
+            round.Frames[5] = new Frame() { FrameNumber = 6, FirstThrow = 10 };
+            foreach(var test in round.Frames)
+            {
+                var totalFrame = test.GetScoreForFrame(round.Frames);
+            }
+            //Act
+            //var result = round.Frames[0].GetScoreForFrame(round.Frames);
+            var result = round.TotalScore;
+
+            //Assert
+            Assert.Equal(98, result);
         }
 
 

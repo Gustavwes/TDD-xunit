@@ -10,11 +10,13 @@ namespace Kata_Bowling.Utilities
     {
         public enum FrameStatus
         {
+            Error = 0,
             WaitingOnFirstThrow = 1,
             WaitingOnSecondThrow = 2,
             WatingOnThirdThrow = 3,
             Spare = 4,
-            Strike = 5
+            Strike = 5,
+            Completed = 6
         }
     }
 }

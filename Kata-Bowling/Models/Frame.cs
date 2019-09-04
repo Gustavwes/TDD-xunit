@@ -34,7 +34,7 @@ namespace Kata_Bowling.Models
             set
             {
                 if(value + FirstThrow > 10)
-                    throw new InvalidOperationException($"Knocked down pins are greater than 10 ({FirstThrow} + {value}). Something went wrong");
+                    throw new InvalidOperationException($"Knocked down pins in frame are greater than 10 ({FirstThrow} + {value}). Something went wrong");
                 if (value < 0)
                     throw new InvalidOperationException("Negatives not allowed: " + value);
                 if (value > 10)
@@ -75,7 +75,9 @@ namespace Kata_Bowling.Models
                 //need to implement third throw logic here in the future
                 if (FirstThrow < 10 && FirstThrow + SecondThrow == 10)
                     return (int)StatusUtility.FrameStatus.Spare;
-                return 0;
+                if (FirstThrow != null && SecondThrow != null)
+                    return (int)StatusUtility.FrameStatus.Completed;
+                return (int)StatusUtility.FrameStatus.Error;
             }
         }      
 
@@ -100,6 +102,9 @@ namespace Kata_Bowling.Models
                     }
                     break;
                 case (int)StatusUtility.FrameStatus.Strike:
+                    if (thisFramesArray[FrameNumber] != null
+                        && thisFramesArray[FrameNumber].Status == (int)StatusUtility.FrameStatus.Spare)
+                        return 20;
                     if (thisFramesArray[FrameNumber] != null 
                         && 
                         thisFramesArray[FrameNumber + 1] != null 
