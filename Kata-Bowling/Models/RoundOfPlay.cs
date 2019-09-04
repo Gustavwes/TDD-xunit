@@ -32,8 +32,10 @@ namespace Kata_Bowling.Models
             int? total = 0;
             foreach (var frame in Frames)
             {
-                if(frame != null)
-                    total += frame.GetTotalScoreForFrame(frames);
+                if (frame == null)
+                    break;
+
+                total += frame.GetScoreForFrame(frames);
             }
             return total;
         }

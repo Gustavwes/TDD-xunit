@@ -21,7 +21,7 @@ namespace TDDCORE.tests
             oneFrame.FirstThrow = 5;
             oneFrame.SecondThrow = 2;
             //Assert
-            Assert.Equal(7, oneFrame.GetTotalScoreForFrame(frames));
+            Assert.Equal(7, oneFrame.GetScoreForFrame(frames));
             Assert.Null(oneFrame.Status);
         }
         [Fact]
@@ -66,6 +66,21 @@ namespace TDDCORE.tests
 
             Assert.Equal(17, result);
         }
+
+        [Fact]
+        public void GetTotalScoresWithStrikeSpare()
+        {
+            var testPlayer = new Player();
+            var firstFrame = new Frame { FrameNumber = 1, FirstThrow = 10, SecondThrow = null };
+            var secondFrame = new Frame() { FrameNumber = 2, FirstThrow = 2, SecondThrow = 8 };
+            var roundOfPlay = new RoundOfPlay(testPlayer, 1);
+            roundOfPlay.Frames[0] = firstFrame;
+            roundOfPlay.Frames[1] = secondFrame;
+
+            var result = roundOfPlay.TotalScore;
+
+            Assert.Null(result);
+        }
         [Fact]
         public void GetTotalScoresWithSimpleStrike()
         {
@@ -81,7 +96,44 @@ namespace TDDCORE.tests
 
             Assert.Equal(20, result);
         }
+        [Fact]
+        public void GetTotalScoresWithStrikeSpareNormal()
+        {
+            var testPlayer = new Player();
+            var firstFrame = new Frame { FrameNumber = 1, FirstThrow = 10, SecondThrow = null };
+            var secondFrame = new Frame() { FrameNumber = 2, FirstThrow = 2, SecondThrow = 8 };
+            var thirdFrame = new Frame() { FrameNumber = 3, FirstThrow = 5, SecondThrow = 0 };
 
+            var roundOfPlay = new RoundOfPlay(testPlayer, 1);
+            roundOfPlay.Frames[0] = firstFrame;
+            roundOfPlay.Frames[1] = secondFrame;
+            roundOfPlay.Frames[2] = thirdFrame;
+
+            var result = roundOfPlay.TotalScore;
+
+
+            Assert.Equal(45, result);
+        }
+        [Fact]
+        public void GetMaxPointsForAFrame()
+        {
+            var testPlayer = new Player();
+            var firstFrame = new Frame { FrameNumber = 1, FirstThrow = 10, SecondThrow = null };
+            var secondFrame = new Frame() { FrameNumber = 2, FirstThrow = 10, SecondThrow = null };
+            var thirdFrame = new Frame() { FrameNumber = 3, FirstThrow = 10, SecondThrow = null };
+            var fourthFrame = new Frame() { FrameNumber = 3, FirstThrow = 10, SecondThrow = null };
+
+            var roundOfPlay = new RoundOfPlay(testPlayer, 1);
+            roundOfPlay.Frames[0] = firstFrame;
+            roundOfPlay.Frames[1] = secondFrame;
+            roundOfPlay.Frames[2] = thirdFrame;
+            roundOfPlay.Frames[2] = fourthFrame;
+
+            var result = roundOfPlay.Frames[0].GetScoreForFrame(roundOfPlay.Frames);
+
+            Assert.Equal(30, result);
+
+        }
         [Fact]
         public void GetStatusFromFrame_Expecting_Strike()
         {

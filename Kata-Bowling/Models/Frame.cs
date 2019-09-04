@@ -36,6 +36,7 @@ namespace Kata_Bowling.Models
                     throw new InvalidOperationException("Negatives not allowed: " + value);
                 if (value > 10)
                     throw new InvalidOperationException("Values over 10 not allowed: " + value);
+
                 secondThrow = value;
             }
         }
@@ -71,7 +72,7 @@ namespace Kata_Bowling.Models
             }
         }      
 
-        public int? GetTotalScoreForFrame(Frame[] thisFramesArray)
+        public int? GetScoreForFrame(Frame[] thisFramesArray)
         {
             
             if (FirstThrow == null)
@@ -89,10 +90,12 @@ namespace Kata_Bowling.Models
             }
             if(FirstThrow == 10)
             {
-                if (thisFramesArray[FrameNumber] == null || thisFramesArray[FrameNumber].GetTotalScoreForFrame(thisFramesArray) == null) //the next frame hasn't been calculated yet
+                if (thisFramesArray[FrameNumber] != null && thisFramesArray[FrameNumber + 1] != null && thisFramesArray[FrameNumber].Status == "Strike" && thisFramesArray[FrameNumber + 1].Status == "Strike")
+                    return 30;
+                if (thisFramesArray[FrameNumber] == null || thisFramesArray[FrameNumber].GetScoreForFrame(thisFramesArray) == null) //the next frame hasn't been calculated yet
                     return null;
 
-                return 10 + thisFramesArray[FrameNumber].GetTotalScoreForFrame(thisFramesArray);
+                return 10 + thisFramesArray[FrameNumber].GetScoreForFrame(thisFramesArray);
 
             }
                 //then implement strike here, can potentially get more complicated
