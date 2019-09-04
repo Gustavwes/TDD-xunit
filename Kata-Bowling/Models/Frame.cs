@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Kata_Bowling.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -32,6 +33,8 @@ namespace Kata_Bowling.Models
             }
             set
             {
+                if(value + FirstThrow > 10)
+                    throw new InvalidOperationException($"Knocked down pins are greater than 10 ({FirstThrow} + {value}). Something went wrong");
                 if (value < 0)
                     throw new InvalidOperationException("Negatives not allowed: " + value);
                 if (value > 10)
@@ -59,17 +62,20 @@ namespace Kata_Bowling.Models
         }
         private int? scoreForFrame { get; set; }
         
-        public string Status
+        public int Status
         {
             get
             {
                 if (FirstThrow == 10)
-                    return "Strike";
+                    return (int)StatusUtility.FrameStatus.Strike;
                 if (FirstThrow == null)
-                    return "Awaiting first throw for frame";
+                    return (int)StatusUtility.FrameStatus.WaitingOnFirstThrow;
+                if (FirstThrow < 10 && SecondThrow == null)
+                    return (int)StatusUtility.FrameStatus.WaitingOnSecondThrow;
+                //need to implement third throw logic here in the future
                 if (FirstThrow < 10 && FirstThrow + SecondThrow == 10)
-                    return "Spare";
-                return null;
+                    return (int)StatusUtility.FrameStatus.Spare;
+                return 0;
             }
         }      
 
@@ -78,45 +84,50 @@ namespace Kata_Bowling.Models
             if (scoreForFrame != null)
                 return scoreForFrame;
             
-            if (FirstThrow == null)
-                return null;
-            if ((SecondThrow) == null && Status != "Strike")
-                return FirstThrow;
-            if(FirstThrow != 10 && FirstThrow + SecondThrow == 10) //if we got a spare
+            switch(Status)
             {
-                //return null if next throw is empty (as score can't be calculated yet)
-                if (thisFramesArray[FrameNumber] == null) //the next frame
+                case (int)StatusUtility.FrameStatus.WaitingOnFirstThrow:
                     return null;
-                if (thisFramesArray[FrameNumber].FirstThrow != null)
-                {
-                    scoreForFrame = 10 + thisFramesArray[FrameNumber].FirstThrow;
-                    return 10 + thisFramesArray[FrameNumber].FirstThrow;
-                }
+                case (int)StatusUtility.FrameStatus.WaitingOnSecondThrow:
+                    return FirstThrow;
+                case (int)StatusUtility.FrameStatus.Spare:
+                    if (thisFramesArray[FrameNumber] == null) //the next frame
+                        return null;
+                    if (thisFramesArray[FrameNumber].FirstThrow != null)
+                    {
+                        scoreForFrame = 10 + thisFramesArray[FrameNumber].FirstThrow;
+                        return 10 + thisFramesArray[FrameNumber].FirstThrow;
+                    }
+                    break;
+                case (int)StatusUtility.FrameStatus.Strike:
+                    if (thisFramesArray[FrameNumber] != null 
+                        && 
+                        thisFramesArray[FrameNumber + 1] != null 
+                        && 
+                        thisFramesArray[FrameNumber].Status == (int)StatusUtility.FrameStatus.Strike 
+                        &&
+                        thisFramesArray[FrameNumber + 1].Status == (int)StatusUtility.FrameStatus.Strike)
+                    {
+                        scoreForFrame = 30;
+                        return 30;
+                    }
+                    if (thisFramesArray[FrameNumber] == null)
+                    {
+                        scoreForFrame = null;
+                        return null;
+                    }
+                    if (thisFramesArray[FrameNumber] != null && thisFramesArray[FrameNumber].Status == (int)StatusUtility.FrameStatus.Strike && thisFramesArray[FrameNumber + 1] == null)
+                        return null;
 
+                    scoreForFrame = 10 + (thisFramesArray[FrameNumber].GetScoreForFrame(thisFramesArray) ?? 0);
+                    return 10 + thisFramesArray[FrameNumber].GetScoreForFrame(thisFramesArray);
+                default:
+                    scoreForFrame = FirstThrow + SecondThrow;
+                    return FirstThrow + SecondThrow;
             }
-            if(FirstThrow == 10)
-            {
-                
-                if (thisFramesArray[FrameNumber] != null && thisFramesArray[FrameNumber + 1] != null && thisFramesArray[FrameNumber].Status == "Strike" && thisFramesArray[FrameNumber + 1].Status == "Strike")
-                {
-                    scoreForFrame = 30;
-                    return 30;
-                }
-                if (thisFramesArray[FrameNumber] == null)
-                {
-                    scoreForFrame = null;
-                    return null;
-                }
-                if (thisFramesArray[FrameNumber] != null && thisFramesArray[FrameNumber].Status == "Strike" && thisFramesArray[FrameNumber + 1] == null)
-                    return null;
 
-                scoreForFrame = 10 + (thisFramesArray[FrameNumber].GetScoreForFrame(thisFramesArray) ?? 0);
-                return 10 + thisFramesArray[FrameNumber].GetScoreForFrame(thisFramesArray);
-
-            }
-            //then implement strike here, can potentially get more complicated
-            scoreForFrame = FirstThrow + SecondThrow;
-            return FirstThrow + SecondThrow;           
+            return null;
+                 
         }
     }
 }

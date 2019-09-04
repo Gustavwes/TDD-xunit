@@ -5,6 +5,7 @@ using Xunit;
 using Kata_Bowling.Operators;
 using Kata_Bowling.Models;
 using System.Linq;
+using Kata_Bowling.Utilities;
 
 namespace TDDCORE.tests
 {
@@ -22,7 +23,7 @@ namespace TDDCORE.tests
             oneFrame.SecondThrow = 2;
             //Assert
             Assert.Equal(7, oneFrame.GetScoreForFrame(frames));
-            Assert.Null(oneFrame.Status);
+            Assert.Equal(0, oneFrame.Status);
         }
         [Fact]
         public void GetTotalScoreOnPlayerRound_Simple_After_Two_Frames()
@@ -170,7 +171,7 @@ namespace TDDCORE.tests
             //Act
             var result = oneFrame.Status;
             //Assert
-            Assert.Equal("Strike", result);
+            Assert.Equal((int)StatusUtility.FrameStatus.Strike, result);
 
         }
         [Fact]
@@ -181,7 +182,7 @@ namespace TDDCORE.tests
             //Act
             var result = oneFrame.Status;
             //Assert
-            Assert.Equal("Spare", result);
+            Assert.Equal((int)StatusUtility.FrameStatus.Spare, result);
         }
         [Fact]
         public void ThrowInvalidOperation_When_Negative_Score_Set()
@@ -190,6 +191,14 @@ namespace TDDCORE.tests
             var ex = Assert.Throws<InvalidOperationException>(() => new Frame { FirstThrow = -1 });
             //Assert
             Assert.Equal("Negatives not allowed: -1", ex.Message);
+        }
+        [Fact]
+        public void ThrowInvalidOperation_When_Impossible_Score_Set()
+        {
+            //Act
+            var ex = Assert.Throws<InvalidOperationException>(() => new Frame { FirstThrow = 7, SecondThrow = 5 });
+            //Assert
+            Assert.Equal("Knocked down pins are greater than 10 (7 + 5). Something went wrong", ex.Message);
         }
 
         [Fact]
