@@ -9,7 +9,16 @@ namespace Kata_Bowling.Models
     public class RoundOfPlay
     {
         public Player Player { get; set; }
-        public List<Frame> Frames { get; set; }
+        public int Round { get; set; }
+        private Frame[] frames { get; set; }
+        public Frame[] Frames
+        {
+            get { return frames; }
+            set
+            {
+                frames = value;                
+            }
+        }
         public int? TotalScore
         {
             get
@@ -21,11 +30,19 @@ namespace Kata_Bowling.Models
         private int? GetTotalScore()
         {
             int? total = 0;
-            foreach(var frame in Frames)
+            foreach (var frame in Frames)
             {
-                total += frame?.Total;
+                if(frame != null)
+                    total += frame.GetTotalScoreForFrame(frames);
             }
             return total;
+        }
+
+        public RoundOfPlay(Player player, int round)
+        {
+            Player = player;
+            Round = round;
+            frames = new Frame[10];
         }
     }
 }

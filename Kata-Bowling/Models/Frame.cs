@@ -9,10 +9,11 @@ namespace Kata_Bowling.Models
     public class Frame
     {
         public int FrameNumber { get; set; }
+        private int ? firstThrow { get; set; }
         public int? FirstThrow {
             get
             {
-                return FirstThrow;
+                return firstThrow;
             }
             set
             {
@@ -20,12 +21,14 @@ namespace Kata_Bowling.Models
                     throw new InvalidOperationException("Negatives not allowed: " + value);
                 if(value > 10)
                     throw new InvalidOperationException("Values over 10 not allowed: " + value);
+                firstThrow = value;
             }
         }
+        private int? secondThrow { get; set; }
         public int? SecondThrow {
             get
             {
-                return SecondThrow;
+                return secondThrow; 
             }
             set
             {
@@ -33,8 +36,27 @@ namespace Kata_Bowling.Models
                     throw new InvalidOperationException("Negatives not allowed: " + value);
                 if (value > 10)
                     throw new InvalidOperationException("Values over 10 not allowed: " + value);
+                secondThrow = value;
             }
         }
+        private int? thirdThrow
+        {
+            get
+            {
+                return thirdThrow;
+            }
+            set
+            {
+                if (value < 0)
+                    throw new InvalidOperationException("Negatives not allowed: " + value);
+                if (value > 10)
+                    throw new InvalidOperationException("Values over 10 not allowed: " + value);
+                if(FrameNumber != 10)
+                    throw new InvalidOperationException("Can only have a third throw in frame 10. Current frame number: " + FrameNumber);
+                thirdThrow = value;
+            }
+        }
+
         public string Status
         {
             get
@@ -47,22 +69,34 @@ namespace Kata_Bowling.Models
                     return "Spare";
                 return null;
             }
-        }
-        public int? Total
+        }      
+
+        public int? GetTotalScoreForFrame(Frame[] thisFramesArray)
         {
-            get
+            
+            if (FirstThrow == null)
+                return null;
+            if ((SecondThrow) == null && FirstThrow != 10)
+                return FirstThrow;
+            if(FirstThrow != 10 && FirstThrow + SecondThrow == 10) //if we got a spare
             {
-                if (FirstThrow == null)
-                    return 0;
-                if ((SecondThrow) == null)
-                    return FirstThrow;
-                return FirstThrow + SecondThrow;
+                //return null if next throw is empty (as score can't be calculated yet)
+                if (thisFramesArray[FrameNumber] == null) //the next frame
+                    return null;
+                if (thisFramesArray[FrameNumber].firstThrow != null)
+                    return 10 + thisFramesArray[FrameNumber].firstThrow;
+
             }
-        }
+            if(FirstThrow == 10)
+            {
+                if (thisFramesArray[FrameNumber] == null || thisFramesArray[FrameNumber].GetTotalScoreForFrame(thisFramesArray) == null) //the next frame hasn't been calculated yet
+                    return null;
 
-        public void PlayFrame()
-        {
+                return 10 + thisFramesArray[FrameNumber].GetTotalScoreForFrame(thisFramesArray);
 
+            }
+                //then implement strike here, can potentially get more complicated
+            return FirstThrow + SecondThrow;           
         }
     }
 }
