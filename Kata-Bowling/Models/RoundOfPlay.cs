@@ -35,7 +35,7 @@ namespace Kata_Bowling.Models
                 if (frame == null)
                     break;
 
-                total += frame.GetScoreForFrame(frames);
+                total += frame.GetScoreForFrame(frames) != null ? frame.GetScoreForFrame(frames) : 0;
             }
             return total;
         }

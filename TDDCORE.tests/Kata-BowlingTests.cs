@@ -79,7 +79,7 @@ namespace TDDCORE.tests
 
             var result = roundOfPlay.TotalScore;
 
-            Assert.Null(result);
+            Assert.Equal(0, result);
         }
         [Fact]
         public void GetTotalScoresWithSimpleStrike()
@@ -127,11 +127,38 @@ namespace TDDCORE.tests
             roundOfPlay.Frames[0] = firstFrame;
             roundOfPlay.Frames[1] = secondFrame;
             roundOfPlay.Frames[2] = thirdFrame;
+            roundOfPlay.Frames[3] = fourthFrame;
+
+            var result1 = roundOfPlay.Frames[0].GetScoreForFrame(roundOfPlay.Frames);
+            var result2 = roundOfPlay.Frames[1].GetScoreForFrame(roundOfPlay.Frames);
+            var shouldBeNull = roundOfPlay.Frames[2].GetScoreForFrame(roundOfPlay.Frames);
+            var resultTotal = roundOfPlay.TotalScore;
+            Assert.Equal(30, result1);
+            Assert.Equal(30, result2);
+            Assert.Equal(60, resultTotal);
+            Assert.Null(shouldBeNull);
+
+        }
+        [Fact]
+        public void GetMaxPointsForAFrame_AndThenStopStrikeChain()
+        {
+            var testPlayer = new Player();
+            var firstFrame = new Frame { FrameNumber = 1, FirstThrow = 10, SecondThrow = null };
+            var secondFrame = new Frame() { FrameNumber = 2, FirstThrow = 10, SecondThrow = null };
+            var thirdFrame = new Frame() { FrameNumber = 3, FirstThrow = 10, SecondThrow = null };
+            var fourthFrame = new Frame() { FrameNumber = 3, FirstThrow = 10, SecondThrow = null };
+            var fifthFrame = new Frame() { FrameNumber = 3, FirstThrow = 1, SecondThrow = 0 };
+
+            var roundOfPlay = new RoundOfPlay(testPlayer, 1);
+            roundOfPlay.Frames[0] = firstFrame;
+            roundOfPlay.Frames[1] = secondFrame;
+            roundOfPlay.Frames[2] = thirdFrame;
             roundOfPlay.Frames[2] = fourthFrame;
 
             var result = roundOfPlay.Frames[0].GetScoreForFrame(roundOfPlay.Frames);
-
+            var resultTotal = roundOfPlay.TotalScore;
             Assert.Equal(30, result);
+            Assert.Equal(30, resultTotal);
 
         }
         [Fact]

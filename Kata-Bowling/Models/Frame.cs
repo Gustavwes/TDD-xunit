@@ -57,7 +57,8 @@ namespace Kata_Bowling.Models
                 thirdThrow = value;
             }
         }
-
+        private int? scoreForFrame { get; set; }
+        
         public string Status
         {
             get
@@ -74,31 +75,47 @@ namespace Kata_Bowling.Models
 
         public int? GetScoreForFrame(Frame[] thisFramesArray)
         {
+            if (scoreForFrame != null)
+                return scoreForFrame;
             
             if (FirstThrow == null)
                 return null;
-            if ((SecondThrow) == null && FirstThrow != 10)
+            if ((SecondThrow) == null && Status != "Strike")
                 return FirstThrow;
             if(FirstThrow != 10 && FirstThrow + SecondThrow == 10) //if we got a spare
             {
                 //return null if next throw is empty (as score can't be calculated yet)
                 if (thisFramesArray[FrameNumber] == null) //the next frame
                     return null;
-                if (thisFramesArray[FrameNumber].firstThrow != null)
-                    return 10 + thisFramesArray[FrameNumber].firstThrow;
+                if (thisFramesArray[FrameNumber].FirstThrow != null)
+                {
+                    scoreForFrame = 10 + thisFramesArray[FrameNumber].FirstThrow;
+                    return 10 + thisFramesArray[FrameNumber].FirstThrow;
+                }
 
             }
             if(FirstThrow == 10)
             {
+                
                 if (thisFramesArray[FrameNumber] != null && thisFramesArray[FrameNumber + 1] != null && thisFramesArray[FrameNumber].Status == "Strike" && thisFramesArray[FrameNumber + 1].Status == "Strike")
+                {
+                    scoreForFrame = 30;
                     return 30;
-                if (thisFramesArray[FrameNumber] == null || thisFramesArray[FrameNumber].GetScoreForFrame(thisFramesArray) == null) //the next frame hasn't been calculated yet
+                }
+                if (thisFramesArray[FrameNumber] == null)
+                {
+                    scoreForFrame = null;
+                    return null;
+                }
+                if (thisFramesArray[FrameNumber] != null && thisFramesArray[FrameNumber].Status == "Strike" && thisFramesArray[FrameNumber + 1] == null)
                     return null;
 
+                scoreForFrame = 10 + (thisFramesArray[FrameNumber].GetScoreForFrame(thisFramesArray) ?? 0);
                 return 10 + thisFramesArray[FrameNumber].GetScoreForFrame(thisFramesArray);
 
             }
-                //then implement strike here, can potentially get more complicated
+            //then implement strike here, can potentially get more complicated
+            scoreForFrame = FirstThrow + SecondThrow;
             return FirstThrow + SecondThrow;           
         }
     }
