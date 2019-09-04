@@ -146,19 +146,20 @@ namespace TDDCORE.tests
             var firstFrame = new Frame { FrameNumber = 1, FirstThrow = 10, SecondThrow = null };
             var secondFrame = new Frame() { FrameNumber = 2, FirstThrow = 10, SecondThrow = null };
             var thirdFrame = new Frame() { FrameNumber = 3, FirstThrow = 10, SecondThrow = null };
-            var fourthFrame = new Frame() { FrameNumber = 3, FirstThrow = 10, SecondThrow = null };
-            var fifthFrame = new Frame() { FrameNumber = 3, FirstThrow = 1, SecondThrow = 0 };
+            var fourthFrame = new Frame() { FrameNumber = 4, FirstThrow = 10, SecondThrow = null };
+            var fifthFrame = new Frame() { FrameNumber = 5, FirstThrow = 1, SecondThrow = 0 };
 
             var roundOfPlay = new RoundOfPlay(testPlayer, 1);
             roundOfPlay.Frames[0] = firstFrame;
             roundOfPlay.Frames[1] = secondFrame;
             roundOfPlay.Frames[2] = thirdFrame;
-            roundOfPlay.Frames[2] = fourthFrame;
+            roundOfPlay.Frames[3] = fourthFrame;
+            roundOfPlay.Frames[4] = fifthFrame;
 
             var result = roundOfPlay.Frames[0].GetScoreForFrame(roundOfPlay.Frames);
             var resultTotal = roundOfPlay.TotalScore;
             Assert.Equal(30, result);
-            Assert.Equal(30, resultTotal);
+            Assert.Equal(93, resultTotal);
 
         }
         [Fact]
