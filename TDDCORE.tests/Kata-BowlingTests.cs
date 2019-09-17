@@ -366,47 +366,49 @@ namespace TDDCORE.tests
         [Fact]
         public void FunTestToReachPerfectScore()
         {
-            var round = new RoundOfPlay(new Player(), 1);
-            long total = 0;
-            long highestRound = 0;
-            var highestRoundFrames = new Frame[10];
-            var lowestRound = 100;
-            var lowestRoundFrames = new Frame[10];
-            long amountOfTestRuns = 0;
+            // The odds of getting the perfect score are incredibly low, so don't run this test along with the others, but uncomment everything below if you want to 
+            //test it
+            //var round = new RoundOfPlay(new Player(), 1);
+            //long total = 0;
+            //long highestRound = 0;
+            //var highestRoundFrames = new Frame[10];
+            //var lowestRound = 100;
+            //var lowestRoundFrames = new Frame[10];
+            //long amountOfTestRuns = 0;
 
-            var perfect = new RoundOfPlay(new Player(), 1);
+            //var perfect = new RoundOfPlay(new Player(), 1);
 
-            perfect.Frames = GetPerfectRound();
-            var testTotal = perfect.TotalScore;
-            try
-            {
-                while(highestRound < 300)
-                {
-                    var fullRoundOfFrames = GenerateSpecifiedNumberOfRandomFrames(10);
-                    round.Frames = fullRoundOfFrames.ToArray();
-                    total += (int)round.TotalScore;
-                    if ((int)round.TotalScore > highestRound)
-                    {
-                        highestRound = (int)round.TotalScore;
-                        highestRoundFrames = round.Frames;
-                    }
-                    if ((int)round.TotalScore < lowestRound)
-                    {
-                        lowestRound = (int)round.TotalScore;
-                        lowestRoundFrames = round.Frames;
-                    }
-                    amountOfTestRuns++;
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Did not expect an exception, but got: " + ex.Message);
-            }
+            //perfect.Frames = GetPerfectRound();
+            //var testTotal = perfect.TotalScore;
+            //try
+            //{
+            //    while(highestRound < 300)
+            //    {
+            //        var fullRoundOfFrames = GenerateSpecifiedNumberOfRandomFrames(10);
+            //        round.Frames = fullRoundOfFrames.ToArray();
+            //        total += (int)round.TotalScore;
+            //        if ((int)round.TotalScore > highestRound)
+            //        {
+            //            highestRound = (int)round.TotalScore;
+            //            highestRoundFrames = round.Frames;
+            //        }
+            //        if ((int)round.TotalScore < lowestRound)
+            //        {
+            //            lowestRound = (int)round.TotalScore;
+            //            lowestRoundFrames = round.Frames;
+            //        }
+            //        amountOfTestRuns++;
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    Console.WriteLine("Did not expect an exception, but got: " + ex.Message);
+            //}
 
         }
 
         private Frame[] GeneratePredictableFrames(int numberOfFrames)
-        {
+        {            
             var frames = new Frame[10];
             for (int i = 0; i < numberOfFrames; i++)
             {
